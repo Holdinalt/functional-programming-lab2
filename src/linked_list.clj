@@ -15,21 +15,21 @@
     )
   )
 
-;(defn contains [{:keys [key next]} to-key]
-;  (cond
-;    (= key to-key) true
-;    next (recur next to-key)
-;    :else false
-;    )
-;  )
-;
-;(defn remove-entry [{:keys [next] :as entry} to-key]
-;  (cond
-;    (nil? next) ()
-;    (= (next :value) to-key) (update entry :next ((entry :next) :next))
-;    :else (recur next to-key)
-;    )
-;  )
+(defn contains [{:keys [key next]} to-key]
+  (cond
+    (= key to-key) true
+    next (recur next to-key)
+    :else false
+    )
+  )
+
+(defn remove-entry [{:keys [next key] :as entry} to-key]
+  (cond
+    (nil? entry) nil
+    (= key to-key) next
+    :else (update entry :next #(remove-entry % to-key))
+    )
+  )
 
 (add-entry nil 1 "hello")
 
@@ -41,6 +41,6 @@
 
 (contains (add-entry nil 1 "hello") 2)
 
-(contains (remove-entry (add-entry nil 1 'hello') 1) 1)
+(remove-entry (add-entry nil 1 'hello') 1)
 
 (contains (add-entry (add-entry nil 1 "hello") 2 "end") 2)
