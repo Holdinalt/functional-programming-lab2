@@ -31,6 +31,14 @@
     )
   )
 
+(defn find-entry [{:keys [next key] :as entry} to-key]
+  (cond
+    (nil? entry) nil
+    (= key to-key) entry
+    :else (find-entry next to-key)
+    )
+  )
+
 (add-entry nil 1 "hello")
 
 (add-entry (add-entry nil 1 "hello") 2 "end")
@@ -44,3 +52,5 @@
 (remove-entry (add-entry nil 1 'hello') 1)
 
 (contains (add-entry (add-entry nil 1 "hello") 2 "end") 2)
+
+(find-entry (add-entry (add-entry nil 1 "hello") 2 "end") 3)
