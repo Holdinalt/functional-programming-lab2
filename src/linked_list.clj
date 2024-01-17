@@ -38,3 +38,10 @@
     :else (find-entry next to-value)
     )
   )
+
+(defn get-vector [{:keys [next value] :as entry}]
+  (cond
+    entry (conj (get-vector next) value)
+    :else []
+    )
+  )

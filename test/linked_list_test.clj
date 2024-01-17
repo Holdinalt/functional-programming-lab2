@@ -57,6 +57,23 @@
           )
         )
     )
+  (testing "get-vector"
+    (is (=
+          (linked-list/get-vector two-list)
+          ["World!" "hello"]
+          )
+        )
+    (is (=
+          (linked-list/get-vector one-list)
+          ["hello"]
+          )
+        )
+    (is (=
+          (linked-list/get-vector nil)
+          []
+          )
+        )
+    )
   )
 
 

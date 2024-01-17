@@ -41,10 +41,22 @@
     )
   )
 
+(defn has [collection value]
+  (cond
+    collection (linked-list/contains (get-bucket-by-val collection value) value)
+    :else false
+    )
+  )
 
-
-(add (add (add nil "hello") "2") "1")
-
-(delete (add (add (add nil "hello") "2") "1") "hello")
-
-(get-hash 2)
+(defn get-vector [collection]
+  (cond
+    collection (into [] (reduce
+                          (fn [acc bucket]
+                            (concat acc (linked-list/get-vector bucket))
+                            )
+                          []
+                          collection
+                          ))
+    :else []
+    )
+  )
