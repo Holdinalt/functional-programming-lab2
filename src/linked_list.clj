@@ -1,56 +1,40 @@
 (ns linked-list)
 
-(defn create-entry [key value] {:key key :value value :next nil})
+(defn create-entry [value] {:value value :next nil})
 
-(defn add-entry [entry new-key new-value]
+(defn add-entry [entry new-value]
   (cond
     entry (cond
-            (= (entry :key) new-key) (cond
-                                       (entry :next) (update entry :next (add-entry (entry :next :next) new-key new-value))
-                                       :else (create-entry new-key new-value)
+            (= (entry :value) new-value) (cond
+                                       (entry :next) (update entry :next (add-entry (entry :next :next) new-value))
+                                       :else (create-entry new-value)
                                        )
-            :else (update entry :next #(add-entry % new-key new-value))
+            :else (update entry :next #(add-entry % new-value))
             )
-    :else (create-entry new-key new-value)
+    :else (create-entry new-value)
     )
   )
 
-(defn contains [{:keys [key next]} to-key]
+(defn contains [{:keys [value next]} to-value]
   (cond
-    (= key to-key) true
-    next (recur next to-key)
+    (= value to-value) true
+    next (recur next to-value)
     :else false
     )
   )
 
-(defn remove-entry [{:keys [next key] :as entry} to-key]
+(defn remove-entry [{:keys [next value] :as entry} to-value]
   (cond
     (nil? entry) nil
-    (= key to-key) next
-    :else (update entry :next #(remove-entry % to-key))
+    (= value to-value) next
+    :else (update entry :next #(remove-entry % to-value))
     )
   )
 
-(defn find-entry [{:keys [next key] :as entry} to-key]
+(defn find-entry [{:keys [next value] :as entry} to-value]
   (cond
     (nil? entry) nil
-    (= key to-key) entry
-    :else (find-entry next to-key)
+    (= value to-value) entry
+    :else (find-entry next to-value)
     )
   )
-
-(add-entry nil 1 "hello")
-
-(add-entry (add-entry nil 1 "hello") 2 "end")
-
-(add-entry (add-entry nil 1 "hello") 1 "hello2")
-
-(contains (add-entry nil 1 "hello") 1)
-
-(contains (add-entry nil 1 "hello") 2)
-
-(remove-entry (add-entry nil 1 'hello') 1)
-
-(contains (add-entry (add-entry nil 1 "hello") 2 "end") 2)
-
-(find-entry (add-entry (add-entry nil 1 "hello") 2 "end") 3)
