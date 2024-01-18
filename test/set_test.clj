@@ -114,7 +114,7 @@
         )
     (is (=
           (set/filter-set #(= "hello" %) nil)
-          []
+          nil
           )
         )
     )
@@ -131,7 +131,7 @@
         )
     (is (=
           (set/map-set #(= "hello" %) nil)
-          []
+          nil
           )
         )
     )

@@ -82,18 +82,27 @@
   )
 
 (defn filter-set [filterFn collection]
-  (conv-vec (map #(linked-list/filter-entry % filterFn) collection))
+  (cond
+    collection (conv-vec (map #(linked-list/filter-entry % filterFn) collection))
+    :else nil
+    )
   )
 
 (defn map-set [fun collection]
-  (conv-vec (restruct (map #(linked-list/map-entry % fun) collection) (count collection)))
+  (cond
+    collection (conv-vec (restruct (map #(linked-list/map-entry % fun) collection) (count collection)))
+    :else nil
+    )
   )
 
 (defn reduce-set [fun accum collection]
-  (reduce
-    (fn [acc bucket]
-      (linked-list/reduce-entry fun acc bucket)
-      )
-    accum
-    collection)
+  (cond
+    collection (reduce
+                 (fn [acc bucket]
+                   (linked-list/reduce-entry fun acc bucket)
+                   )
+                 accum
+                 collection)
+    :else accum
+    )
   )
