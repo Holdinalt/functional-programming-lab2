@@ -8,19 +8,6 @@
   (mod (get-hash new-value) (count collection))
   )
 
-(defn restruct [collection buckets-n]
-  (cond
-    collection (reduce
-                 (fn [acc bucket]
-                   (linked-list/reduce-entry (fn [acc2 val] (set/add val acc2)) acc bucket)
-                   )
-                 (create-collection buckets-n)
-                 collection
-                 )
-    :else []
-    )
-  )
-
 (defn update-bucket [bucket-num new-bucket collection]
   (assoc
     collection
@@ -41,6 +28,19 @@
                  collection
                  )
     :else (recur value (create-collection 8))
+    )
+  )
+
+(defn restruct [collection buckets-n]
+  (cond
+    collection (reduce
+                 (fn [acc bucket]
+                   (linked-list/reduce-entry (fn [acc2 val] (set/add val acc2)) acc bucket)
+                   )
+                 (create-collection buckets-n)
+                 collection
+                 )
+    :else []
     )
   )
 

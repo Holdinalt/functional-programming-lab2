@@ -138,12 +138,12 @@
   (testing "reduce-set"
     (is (=
           (set/reduce-set str "" filled)
-          [nil nil nil nil nil {:value false, :next nil} nil nil]
+          "3212415"
           )
         )
     (is (=
           (set/reduce-set str "" nil)
-          []
+          ""
           )
         )
     )
