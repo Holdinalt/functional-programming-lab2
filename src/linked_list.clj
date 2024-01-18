@@ -68,3 +68,10 @@
     )
   )
 
+(defn count-entry [{:keys [next] :as entry}]
+  (cond
+    entry (+ 1 (count-entry next))
+    :else 0
+    )
+  )
+
