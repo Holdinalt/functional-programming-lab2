@@ -4,11 +4,11 @@
 
 (defn create-collection [n] (vec (repeat n nil)))
 (defn get-hash [n] (hash n))
-(defn get-bucket-num [collection new-value]
+(defn get-bucket-num [new-value collection]
   (mod (get-hash new-value) (count collection))
   )
 
-(defn update-bucket [collection bucket-num new-bucket]
+(defn update-bucket [bucket-num new-bucket collection]
   (assoc
     collection
     bucket-num
@@ -16,34 +16,34 @@
     )
   )
 
-(defn get-bucket-by-val [collection new-value]
-  (collection (get-bucket-num collection new-value))
+(defn get-bucket-by-val [new-value collection]
+  (collection (get-bucket-num new-value collection))
   )
 
-(defn add [collection value]
+(defn add [value collection]
   (cond
     collection (update-bucket
+                 (get-bucket-num value collection)
+                 (linked-list/add-entry (get-bucket-by-val value collection) value)
                  collection
-                 (get-bucket-num collection value)
-                 (linked-list/add-entry (get-bucket-by-val collection value) value)
                  )
-    :else (recur (create-collection 8) value)
+    :else (recur value (create-collection 8))
     )
   )
 
-(defn delete [collection value]
+(defn delete [value collection]
   (cond
     collection (update-bucket
+                 (get-bucket-num value collection)
+                 (linked-list/remove-entry (get-bucket-by-val value collection) value)
                  collection
-                 (get-bucket-num collection value)
-                 (linked-list/remove-entry (get-bucket-by-val collection value) value)
                  )
     )
   )
 
-(defn has [collection value]
+(defn has [value collection]
   (cond
-    collection (linked-list/contains (get-bucket-by-val collection value) value)
+    collection (linked-list/contains (get-bucket-by-val value collection) value)
     :else false
     )
   )
@@ -60,3 +60,5 @@
     :else []
     )
   )
+
+(defn filter-set [filterFn collection])

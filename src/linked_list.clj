@@ -45,3 +45,14 @@
     :else []
     )
   )
+
+(defn filter-entry [{:keys [next value] :as entry} filterFn]
+  (cond
+    (nil? entry) nil
+    (false? (filterFn value)) (cond
+                                next (filter-entry next filterFn)
+                                :else nil
+                                )
+    :else (update entry :next #(filter-entry % filterFn))
+    )
+  )

@@ -3,12 +3,12 @@
             [set :as set])
   )
 
-(def filled (set/add (set/add (set/add (set/add (set/add (set/add (set/add nil 1) 2) "5") "4") "3") "2") "1"))
+(def filled (set/add "1" (set/add "2" (set/add "3" (set/add "4" (set/add "5" (set/add 2 (set/add 1 nil))))))))
 
 (deftest linked-list-test
   (testing "add"
     (is (=
-         (set/add nil "hello")
+         (set/add "hello" nil )
          [nil nil nil {:value "hello", :next nil} nil nil nil nil]
           ))
     (is (=
@@ -25,26 +25,26 @@
     )
   (testing "has"
     (is (=
-          (set/has nil 3)
+          (set/has 3 nil)
           false
           ))
     (is (=
-          (set/has filled 10)
+          (set/has 10 filled)
           false
           ))
     (is (=
-          (set/has filled "3")
+          (set/has "3" filled)
           true
           ))
 
     )
   (testing "delete"
     (is (=
-          (set/delete nil 2)
+          (set/delete 2 nil)
           nil
           ))
     (is (=
-          (set/delete filled "3")
+          (set/delete "3" filled)
           [nil nil nil
            {:value "2", :next nil}
            {:value 1, :next {:value 2, :next {:value "4", :next nil}}}
@@ -53,7 +53,7 @@
            {:value "5", :next nil}]
           ))
     (is (=
-          (set/delete filled 1)
+          (set/delete 1 filled)
           [nil
            {:value "3", :next nil}
            nil
@@ -64,7 +64,7 @@
            {:value "5", :next nil}]
           ))
     (is (=
-          (set/delete filled "4")
+          (set/delete "4" filled)
           [nil
            {:value "3", :next nil}
            nil
@@ -75,7 +75,7 @@
            {:value "5", :next nil}]
           ))
     (is (=
-          (set/delete filled 10)
+          (set/delete 10 filled)
           [nil
            {:value "3", :next nil}
            nil
@@ -96,7 +96,7 @@
           ["3" "2" "4" 2 1 "1" "5"]
           ))
     (is (=
-          (set/get-vector (set/add nil "hello"))
+          (set/get-vector (set/add "hello" nil))
           ["hello"]
           ))
     )
