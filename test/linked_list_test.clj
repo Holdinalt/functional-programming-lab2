@@ -74,6 +74,58 @@
           )
         )
     )
+  (testing "filter-entry"
+    (is (=
+          (linked-list/filter-entry two-list #(= "hello" %))
+          {:value "hello", :next nil}
+          )
+        )
+    (is (=
+          (linked-list/filter-entry one-list #(= "hello" %))
+          {:value "hello", :next nil}
+          )
+        )
+    (is (=
+          (linked-list/filter-entry nil #(= "hello" %))
+          nil
+          )
+        )
+    )
+  (testing "map-entry"
+    (is (=
+          (linked-list/map-entry (linked-list/add-entry two-list "End") #(= "hello" %))
+          {:value false, :next {:value true, :next nil}}
+          )
+        )
+    (is (=
+          (linked-list/map-entry one-list #(= "hello" %))
+          {:value true, :next nil}
+          )
+        )
+    (is (=
+          (linked-list/map-entry nil #(= "hello" %))
+          nil
+          )
+        )
+    )
+
+  (testing "reduce-entry"
+    (is (=
+          (linked-list/reduce-entry str "" two-list)
+          "helloWorld!"
+          )
+        )
+    (is (=
+          (linked-list/reduce-entry str "" one-list)
+          "hello"
+          )
+        )
+    (is (=
+          (linked-list/reduce-entry str "" nil)
+          ""
+          )
+        )
+    )
   )
 
 

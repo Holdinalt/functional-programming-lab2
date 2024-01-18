@@ -101,4 +101,50 @@
           ["hello"]
           ))
     )
+  (testing "filter-set"
+    (is (=
+          (set/filter-set #(= "hello" %) filled)
+          [nil nil nil nil nil nil nil nil]
+          )
+        )
+    (is (=
+          (set/filter-set #(or (= "3" %) (= "2" %)) filled)
+          [nil {:value "3", :next nil} nil {:value "2", :next nil} nil nil nil nil]
+          )
+        )
+    (is (=
+          (set/filter-set #(= "hello" %) nil)
+          []
+          )
+        )
+    )
+  (testing "map-set"
+    (is (=
+          (set/map-set #(= "hello" %) filled)
+          [nil nil nil nil nil {:value false, :next nil} nil nil]
+          )
+        )
+    (is (=
+          (set/map-set #(or (= "3" %) (= "2" %)) filled)
+          [nil nil nil nil nil {:value false, :next nil} nil {:value true, :next nil}]
+          )
+        )
+    (is (=
+          (set/map-set #(= "hello" %) nil)
+          []
+          )
+        )
+    )
+  (testing "reduce-set"
+    (is (=
+          (set/reduce-set str "" filled)
+          [nil nil nil nil nil {:value false, :next nil} nil nil]
+          )
+        )
+    (is (=
+          (set/reduce-set str "" nil)
+          []
+          )
+        )
+    )
   )

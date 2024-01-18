@@ -56,7 +56,7 @@
 
 (defn map-entry [{:keys [next value] :as entry} fun]
   (cond
-    entry (create-entry (fun value) (map-entry next fun))
+    entry (add-entry (map-entry next fun) (fun value))
     :else nil
     )
   )

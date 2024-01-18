@@ -8,6 +8,19 @@
   (mod (get-hash new-value) (count collection))
   )
 
+(defn restruct [collection buckets-n]
+  (cond
+    collection (reduce
+                 (fn [acc bucket]
+                   (linked-list/reduce-entry (fn [acc2 val] (set/add val acc2)) acc bucket)
+                   )
+                 (create-collection buckets-n)
+                 collection
+                 )
+    :else []
+    )
+  )
+
 (defn update-bucket [bucket-num new-bucket collection]
   (assoc
     collection
@@ -61,12 +74,19 @@
     )
   )
 
+(defn conv-vec [par]
+  (cond
+    (nil? par) nil
+    :else (vec par)
+    )
+  )
+
 (defn filter-set [filterFn collection]
-  (map #(linked-list/filter-entry % filterFn) collection)
+  (conv-vec (map #(linked-list/filter-entry % filterFn) collection))
   )
 
 (defn map-set [fun collection]
-  (map #(linked-list/map-entry % fun) collection)
+  (conv-vec (restruct (map #(linked-list/map-entry % fun) collection) (count collection)))
   )
 
 (defn reduce-set [fun accum collection]
