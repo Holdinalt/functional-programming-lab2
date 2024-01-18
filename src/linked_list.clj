@@ -1,17 +1,17 @@
 (ns linked-list)
 
-(defn create-entry [value] {:value value :next nil})
+(defn create-entry [value next] {:value value :next next})
 
-(defn add-entry [entry new-value]
+(defn add-entry [{:keys [next value] :as entry} new-value]
   (cond
     entry (cond
             (= (entry :value) new-value) (cond
-                                       (entry :next) (update entry :next (add-entry (entry :next :next) new-value))
-                                       :else (create-entry new-value)
+                                       (entry :next) (create-entry value (add-entry (entry :next :next) new-value))
+                                       :else (create-entry new-value nil)
                                        )
-            :else (update entry :next #(add-entry % new-value))
+            :else (create-entry value (add-entry next new-value))
             )
-    :else (create-entry new-value)
+    :else (create-entry new-value nil)
     )
   )
 
@@ -26,8 +26,8 @@
 (defn remove-entry [{:keys [next value] :as entry} to-value]
   (cond
     (nil? entry) nil
-    (= value to-value) next
-    :else (update entry :next #(remove-entry % to-value))
+    (= value to-value) (remove-entry next to-value)
+    :else (create-entry value (remove-entry next to-value))
     )
   )
 
@@ -53,6 +53,13 @@
                                 next (filter-entry next filterFn)
                                 :else nil
                                 )
-    :else (update entry :next #(filter-entry % filterFn))
+    :else (create-entry value (filter-entry next filterFn))
+    )
+  )
+
+(defn map-entry [fun {:keys [next value] :as entry}]
+  (cond
+    entry (create-entry (fun value) (map-entry fun next))
+    :else nil
     )
   )

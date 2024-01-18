@@ -61,4 +61,6 @@
     )
   )
 
-(defn filter-set [filterFn collection])
+(defn filter-set [filterFn collection]
+  (map #(linked-list/filter-entry % filterFn) collection)
+  )
