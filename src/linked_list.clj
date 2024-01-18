@@ -5,10 +5,7 @@
 (defn add-entry [{:keys [next value] :as entry} new-value]
   (cond
     entry (cond
-            (= (entry :value) new-value) (cond
-                                       (entry :next) (create-entry value (add-entry (entry :next :next) new-value))
-                                       :else (create-entry new-value nil)
-                                       )
+            (= value new-value) (add-entry next new-value)
             :else (create-entry value (add-entry next new-value))
             )
     :else (create-entry new-value nil)
@@ -57,9 +54,17 @@
     )
   )
 
-(defn map-entry [fun {:keys [next value] :as entry}]
+(defn map-entry [{:keys [next value] :as entry} fun]
   (cond
-    entry (create-entry (fun value) (map-entry fun next))
+    entry (create-entry (fun value) (map-entry next fun))
     :else nil
     )
   )
+
+(defn reduce-entry [fun accum {:keys [next value] :as entry}]
+  (cond
+    entry (reduce-entry fun (fun accum value) next)
+    :else accum
+    )
+  )
+

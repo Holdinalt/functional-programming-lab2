@@ -64,3 +64,16 @@
 (defn filter-set [filterFn collection]
   (map #(linked-list/filter-entry % filterFn) collection)
   )
+
+(defn map-set [fun collection]
+  (map #(linked-list/map-entry % fun) collection)
+  )
+
+(defn reduce-set [fun accum collection]
+  (reduce
+    (fn [acc bucket]
+      (linked-list/reduce-entry fun acc bucket)
+      )
+    accum
+    collection)
+  )
