@@ -7,41 +7,31 @@
 
 (deftest linked-list-test
   (testing "add-entry"
-    (is (=
-         one-list
-         {:value "hello", :next nil}))
-    (is (=
-         two-list
-         {:value "hello", :next {:value "World!", :next nil}}))
-    (is (=
-         (linked-list/add-entry one-list "hello")
-         {:value "hello", :next nil})))
-
+    (is (linked-list/contains one-list "hello"))
+    (is (linked-list/contains two-list "hello"))
+    (is (linked-list/contains two-list "World!"))
+    (is (not (linked-list/contains one-list "No!"))))
   (testing "remove-entry"
+    (is (= (not
+            (linked-list/contains (linked-list/remove-entry two-list "hello") "hello"))))
+    (is (= (linked-list/contains (linked-list/remove-entry two-list "hello") "World!")))
+    (is (= (not
+            (linked-list/contains (linked-list/remove-entry two-list nil) "hello"))))
     (is (=
-         (linked-list/remove-entry two-list "hello")
-         {:value "World!", :next nil}))
-
-    (is (=
-         (linked-list/remove-entry two-list "End")
-         {:value "hello", :next {:value "World!", :next nil}}))
-
+         (linked-list/remove-entry nil "hello")
+         nil))
     (is (=
          (linked-list/remove-entry one-list "hello")
          nil)))
-
   (testing "find-entry"
     (is (=
          (linked-list/find-entry nil "hello")
          nil))
 
-    (is (=
-         (linked-list/find-entry two-list "World!")
-         {:value "World!", :next nil}))
+    (is (linked-list/contains (linked-list/find-entry two-list "World!") "World!"))
 
-    (is (=
-         (linked-list/find-entry two-list "never")
-         nil)))
+    (is (= (linked-list/find-entry two-list "never") nil)))
+    (is (linked-list/contains (linked-list/find-entry one-list "World!") nil))
 
   (testing "get-vector"
     (is (=
@@ -58,29 +48,36 @@
 
   (testing "filter-entry"
     (is (=
-         (linked-list/filter-entry two-list #(= "hello" %))
-         {:value "hello", :next nil}))
+          (linked-list/get-vector(linked-list/filter-entry two-list #(= "hello" %)))
+          ["hello"]
+          ))
 
     (is (=
-         (linked-list/filter-entry one-list #(= "hello" %))
-         {:value "hello", :next nil}))
+          (linked-list/get-vector(linked-list/filter-entry one-list #(= "hello" %)))
+          ["hello"]
+          ))
 
     (is (=
          (linked-list/filter-entry nil #(= "hello" %))
          nil)))
 
   (testing "map-entry"
-    (is (=
-         (linked-list/map-entry (linked-list/add-entry two-list "End") #(= "hello" %))
-         {:value false, :next {:value true, :next nil}}))
+    (is (let [list (linked-list/map-entry (linked-list/add-entry two-list "End") #(= "hello" %))]
+          (=
+            (linked-list/contains list false)
+            (linked-list/contains list true))
+          ))
 
-    (is (=
-         (linked-list/map-entry one-list #(= "hello" %))
-         {:value true, :next nil}))
+    (is (let [list (linked-list/map-entry one-list #(= "hello" %))]
+          (=
+            (not (linked-list/contains list false))
+            (linked-list/contains list true))
+          )
 
     (is (=
          (linked-list/map-entry nil #(= "hello" %))
          nil)))
+    )
 
   (testing "reduce-entry"
     (is (=

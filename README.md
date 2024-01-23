@@ -30,6 +30,9 @@
 Separate Chaining Hash Map Set
 
 ## Ход работы
+### Структура данных
+
+![img.png](img.png)
 
 ### Linked List
 
