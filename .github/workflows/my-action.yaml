@@ -24,10 +24,10 @@ jobs:
           cljfmt: 0.10.2
 
       - name: Run Lint
-        run: clj-kondo --lint src test
+        run: cljfmt check
 
       - name: Run Fix
-        run: cljfmt fix src test
+        run: cljfmt fix
 
       - name: Run Test
         run: clojure -Mtest

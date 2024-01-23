@@ -4,3 +4,4 @@
 /.nrepl-port
 /.clj-kondo/
 /functional-programming-lab2.iml
+/src/wtf.clj
