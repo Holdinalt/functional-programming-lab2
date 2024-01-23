@@ -31,7 +31,7 @@
     (is (linked-list/contains (linked-list/find-entry two-list "World!") "World!"))
 
     (is (= (linked-list/find-entry two-list "never") nil)))
-    (is (linked-list/contains (linked-list/find-entry one-list "World!") nil))
+  (is (linked-list/contains (linked-list/find-entry one-list "World!") nil))
 
   (testing "get-vector"
     (is (=
@@ -48,14 +48,12 @@
 
   (testing "filter-entry"
     (is (=
-          (linked-list/get-vector(linked-list/filter-entry two-list #(= "hello" %)))
-          ["hello"]
-          ))
+         (linked-list/get-vector (linked-list/filter-entry two-list #(= "hello" %)))
+         ["hello"]))
 
     (is (=
-          (linked-list/get-vector(linked-list/filter-entry one-list #(= "hello" %)))
-          ["hello"]
-          ))
+         (linked-list/get-vector (linked-list/filter-entry one-list #(= "hello" %)))
+         ["hello"]))
 
     (is (=
          (linked-list/filter-entry nil #(= "hello" %))
@@ -64,20 +62,17 @@
   (testing "map-entry"
     (is (let [list (linked-list/map-entry (linked-list/add-entry two-list "End") #(= "hello" %))]
           (=
-            (linked-list/contains list false)
-            (linked-list/contains list true))
-          ))
+           (linked-list/contains list false)
+           (linked-list/contains list true))))
 
     (is (let [list (linked-list/map-entry one-list #(= "hello" %))]
           (=
-            (not (linked-list/contains list false))
-            (linked-list/contains list true))
-          )
+           (not (linked-list/contains list false))
+           (linked-list/contains list true)))
 
-    (is (=
-         (linked-list/map-entry nil #(= "hello" %))
-         nil)))
-    )
+        (is (=
+             (linked-list/map-entry nil #(= "hello" %))
+             nil))))
 
   (testing "reduce-entry"
     (is (=
