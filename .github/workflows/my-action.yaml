@@ -23,9 +23,6 @@ jobs:
           clj-kondo: 2022.05.31
           cljfmt: 0.10.2
 
-      - name: Run Fix
-        run: cljfmt fix
-
       - name: Run Lint
         run: cljfmt check
 
