@@ -41,8 +41,13 @@
 
 (defn has [value collection]
   (cond
-    collection (linked-list/contains (get-bucket-by-val value collection) value)
-    :else false))
+    collection (-> (some #(linked-list/contains % value) collection)
+                   (nil?)
+                   (not)
+                   )
+    :else false
+    )
+  )
 
 (defn get-vector [collection]
   (cond
