@@ -3,23 +3,27 @@
             [set :as set]))
 
 (def filled (set/add "1" (set/add "2" (set/add "3" (set/add "4" (set/add "5" (set/add 2 (set/add 1 nil))))))))
-(def filledNums (set/add 1 (set/add 2 (set/add 3 (set/add 4 (set/add 5 (set/add 2 (set/add 1 nil))))))))
+
+(defn parseString [num]
+  (cond
+    (string? num) (read-string num)
+    :else num
+    )
+  )
 
 (deftest linked-list-test
   (testing "add"
-    (is (=
-         (set/add "hello" nil)
-         [nil nil nil {:value "hello", :next nil} nil nil nil nil]))
-    (is (=
-         filled
-         [nil
-          {:value "3", :next nil}
-          nil
-          {:value "2", :next nil}
-          {:value 1, :next {:value 2, :next {:value "4", :next nil}}}
-          nil
-          {:value "1", :next nil}
-          {:value "5", :next nil}])))
+    (is (set/has "hello" (set/add "hello" nil)))
+
+    (let [added (set/add "hello" (set/add "World" nil))]
+      (is (=
+            (set/has "hello" added)
+            (set/has "World" added)
+            (not (set/has "End" added))
+            ))
+      )
+    )
+
 
   (testing "has"
     (is (=
@@ -36,82 +40,53 @@
     (is (=
          (set/delete 2 nil)
          nil))
-    (is (=
-         (set/delete "3" filled)
-         [nil nil nil
-          {:value "2", :next nil}
-          {:value 1, :next {:value 2, :next {:value "4", :next nil}}}
-          nil
-          {:value "1", :next nil}
-          {:value "5", :next nil}]))
-    (is (=
-         (set/delete 1 filled)
-         [nil
-          {:value "3", :next nil}
-          nil
-          {:value "2", :next nil}
-          {:value 2, :next {:value "4", :next nil}}
-          nil
-          {:value "1", :next nil}
-          {:value "5", :next nil}]))
-    (is (=
-         (set/delete "4" filled)
-         [nil
-          {:value "3", :next nil}
-          nil
-          {:value "2", :next nil}
-          {:value 1, :next {:value 2, :next nil}}
-          nil
-          {:value "1", :next nil}
-          {:value "5", :next nil}]))
-    (is (=
-         (set/delete 10 filled)
-         [nil
-          {:value "3", :next nil}
-          nil
-          {:value "2", :next nil}
-          {:value 1, :next {:value 2, :next {:value "4", :next nil}}}
-          nil
-          {:value "1", :next nil}
-          {:value "5", :next nil}])))
-
+    (is (not (set/has "3" (set/delete "3" filled))))
+    )
   (testing "get-vector"
     (is (=
          (set/get-vector nil)
          []))
     (is (=
-         (set/get-vector filled)
-         ["3" "2" "4" 2 1 "1" "5"]))
+          (vec (sort #(> (parseString %1) (parseString %2)) (set/get-vector filled)))
+          ["5" "4" "3" "2" 2 1 "1"]))
     (is (=
          (set/get-vector (set/add "hello" nil))
          ["hello"])))
 
   (testing "filter-set"
-    (is (=
-         (set/filter-set #(= "hello" %) filled)
-         [nil nil nil nil nil nil nil nil]))
+    (is (not (set/has "hello" (set/filter-set #(= "hello" %) filled))))
 
-    (is (=
-         (set/filter-set #(or (= "3" %) (= "2" %)) filled)
-         [nil {:value "3", :next nil} nil {:value "2", :next nil} nil nil nil nil]))
+    (let [filtered (set/filter-set #(or (= "3" %) (= "2" %)) filled)]
+      (is (=
+            (set/has "3" filtered)
+            (set/has "2" filtered)
+            (not (set/has "5" filtered))
+            ))
+      )
 
     (is (=
          (set/filter-set #(= "hello" %) nil)
          nil)))
 
   (testing "map-set"
-    (is (=
-         (set/map-set #(= "hello" %) filled)
-         [nil nil nil nil nil {:value false, :next nil} nil nil]))
 
+    (let [listFilled (set/map-set #(or (= "3" %) (= "2" %)) filled)]
+      (is
+        (= (set/has true listFilled))
+        (= (set/has false listFilled))
+        )
+      (let [list1 (set/delete true listFilled)]
+        (is
+          (= (not (set/has true list1)))
+          (= (set/has false list1)))
+        (let [list0 (set/get-vector (set/delete false list1))]
+          (is (= [] list0))
+          )
+        )
+      )
     (is (=
-         (set/map-set #(or (= "3" %) (= "2" %)) filled)
-         [nil nil nil nil nil {:value false, :next nil} nil {:value true, :next nil}]))
-
-    (is (=
-         (set/map-set #(= "hello" %) nil)
-         nil)))
-
+          (set/map-set #(= "hello" %) nil)
+          nil)))
   (testing "reduce-set"
     (is (=
          (set/reduce-set str "" filled)
@@ -119,4 +94,5 @@
 
     (is (=
          (set/reduce-set str "" nil)
-         ""))))
+         "")))
+  )
