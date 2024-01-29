@@ -5,14 +5,6 @@
             [clojure.test.check.clojure-test :refer [defspec]]
             [clojure.test.check.properties :as prop]))
 
-(def nums (gen/sample (gen/one-of [gen/boolean
-                                   gen/large-integer
-                                   gen/double
-                                   gen/string-alphanumeric])
-                      100))
-
-(def nums-in-resource (set nums))
-
 (defn add-list [list collection]
   (cond
     (= (count list) 0) [nil]
