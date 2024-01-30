@@ -12,17 +12,24 @@
     (is (linked-list/contains two-list "World!"))
     (is (not (linked-list/contains one-list "No!"))))
   (testing "remove-entry"
-    (is (not
-         (linked-list/contains (linked-list/remove-entry two-list "hello") "hello")))
-    (is (linked-list/contains (linked-list/remove-entry two-list "hello") "World!"))
-    (is (not
-         (linked-list/contains (linked-list/remove-entry two-list nil) "hello")))
+    (is
+      (not (linked-list/contains (linked-list/remove-entry two-list "hello") "hello"))
+        )
+
+    (is (linked-list/contains (linked-list/remove-entry two-list "hello") "World!")
+        )
+
+    (is (linked-list/contains (linked-list/remove-entry two-list nil) "hello")
+        )
+
     (is (=
          (linked-list/remove-entry nil "hello")
          nil))
+
     (is (=
          (linked-list/remove-entry one-list "hello")
          nil)))
+
   (testing "find-entry"
     (is (=
          (linked-list/find-entry nil "hello")
