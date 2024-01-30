@@ -23,12 +23,12 @@
                 collection)
     :else (recur value (create-collection 8))))
 
-(defn restruct [collection buckets-n]
+(defn restruct [collection]
   (cond
     collection (reduce
                 (fn [acc bucket]
                   (linked-list/reduce-entry (fn [acc2 val] (set/add val acc2)) acc bucket))
-                (create-collection buckets-n)
+                (create-collection (count collection))
                 collection)
     :else []))
 
@@ -41,13 +41,11 @@
 
 (defn has [value collection]
   (cond
-    collection (-> (some #(linked-list/contains % value) collection)
-                   (nil?)
-                   (not)
-                   )
-    :else false
-    )
-  )
+    collection (->> collection
+                    (some #(linked-list/contains % value))
+                    (nil?)
+                    (not))
+    :else false))
 
 (defn get-vector [collection]
   (cond
@@ -70,7 +68,11 @@
 
 (defn map-set [fun collection]
   (cond
-    collection (conv-vec (restruct (map #(linked-list/map-entry % fun) collection) (count collection)))
+    collection (->> collection
+                    (map #(linked-list/map-entry % fun))
+                    (restruct)
+                    (conv-vec))
+
     :else nil))
 
 (defn reduce-set [fun accum collection]
