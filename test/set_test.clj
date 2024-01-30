@@ -63,12 +63,12 @@
 
     (let [listFilled (set/map-set #(or (= "3" %) (= "2" %)) filled)]
       (is
-       (= (set/has true listFilled))
-       (= (set/has false listFilled)))
+       (set/has true listFilled)
+       (set/has false listFilled))
       (let [list1 (set/delete true listFilled)]
         (is
-         (= (not (set/has true list1)))
-         (= (set/has false list1)))
+         (not (set/has true list1))
+         (set/has false list1))
         (let [list0 (set/get-vector (set/delete false list1))]
           (is (= [] list0)))))
 
