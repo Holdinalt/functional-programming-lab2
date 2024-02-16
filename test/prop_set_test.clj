@@ -17,6 +17,8 @@
 
     (= vec1 vec2)))
 
+(declare set-add monoid-ident set-delete set-reduce monoid-asoc)
+
 (defspec set-add 100
   (prop/for-all [v (gen/vector (gen/one-of [gen/large-integer gen/small-integer]))]
                 (= (sort (set/get-vector (add-list v nil))) (sort (vec (set v))))))
