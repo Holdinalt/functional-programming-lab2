@@ -79,6 +79,8 @@
 
 (defn reduce-set [fun accum collection]
   (cond
-    collection (->> collection
-                    (reduce #(linked-list/reduce-entry fun %1 %2)))
+    collection (reduce
+                #(linked-list/reduce-entry fun %1 %2)
+                accum
+                collection)
     :else accum))
