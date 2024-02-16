@@ -6,7 +6,7 @@
 
 (defn add-list [list collection]
   (cond
-    (= (count list) 0) nil
+    (= (count list) 0) [nil]
     :else (reduce (fn [accum val] (set/add val accum)) collection list)))
 
 (defn delete-list [list collection] (reduce (fn [accum val] (set/delete val accum)) collection list))
