@@ -12,6 +12,14 @@
 
 (defn delete-list [list collection] (reduce (fn [accum val] (set/delete val accum)) collection list))
 
+(defn comp-list [set1 set2]
+  (let [vec1 (sort (set/get-vector set1))
+        vec2 (sort (set/get-vector set2))]
+
+    (= vec1 vec2)
+    )
+  )
+
 (defspec set-add 100
   (prop/for-all [v (gen/vector (gen/one-of [gen/large-integer gen/small-integer]))]
                 (= (sort (set/get-vector (add-list v nil))) (sort (vec (set v))))))
@@ -36,3 +44,22 @@
                    (fn [accum val] (conj accum (hash val)))
                    '()
                    (set v))))))
+
+(defspec monoid-asoc 100
+  (prop/for-all [v1 (gen/not-empty (gen/vector gen/large-integer))
+                 v2 (gen/not-empty (gen/vector gen/large-integer))]
+    (comp-list
+      (add-list v2 (add-list v1 nil))
+      (add-list v1 (add-list v2 nil))
+      )
+    )
+  )
+
+(defspec monoid-ident 100
+  (prop/for-all [v1 (gen/not-empty (gen/vector gen/large-integer))]
+    (comp-list
+      (add-list v1 (add-list v1 nil))
+      (add-list v1 nil)
+      )
+    )
+  )

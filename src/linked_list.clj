@@ -2,11 +2,11 @@
 
 (defn create-entry [value next] {:value value :next next})
 
-(defn add-entry [{:keys [next value] :as entry} new-value]
+(defn add-entry [new-value {:keys [next value] :as entry}]
   (cond
     entry (cond
-            (= value new-value) (add-entry next new-value)
-            :else (create-entry value (add-entry next new-value)))
+            (= value new-value) (add-entry new-value next)
+            :else (create-entry value (add-entry new-value next)))
     :else (create-entry new-value nil)))
 
 (defn contains [{:keys [value next]} to-value]
@@ -42,7 +42,7 @@
 
 (defn map-entry [{:keys [next value] :as entry} fun]
   (cond
-    entry (add-entry (map-entry next fun) (fun value))
+    entry (add-entry (fun value) (map-entry next fun))
     :else nil))
 
 (defn reduce-entry [fun accum {:keys [next value] :as entry}]

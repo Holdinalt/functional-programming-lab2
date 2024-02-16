@@ -24,7 +24,10 @@ jobs:
           cljfmt: 0.10.2
 
       - name: Run Lint
-        run: cljfmt check
+        run: clj-kondo --lint src test
 
       - name: Run Test
         run: clojure -Mtest
+
+      - name: Run Format Check
+        run: cljfmt check

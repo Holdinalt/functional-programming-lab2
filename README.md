@@ -32,7 +32,7 @@ Separate Chaining Hash Map Set
 ## Ход работы
 ### Структура данных
 
-![img.png](img.png)
+<img src="img.png" alt="img.png" width="350"/>
 
 ### Linked List
 

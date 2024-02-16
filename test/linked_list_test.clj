@@ -2,8 +2,8 @@
   (:require [clojure.test :refer [deftest testing is]]
             [linked-list :as linked-list]))
 
-(def one-list (linked-list/add-entry nil "hello"))
-(def two-list (linked-list/add-entry one-list "World!"))
+(def one-list (linked-list/add-entry "hello" nil))
+(def two-list (linked-list/add-entry "World!" one-list))
 
 (deftest linked-list-test
   (testing "add-entry"
@@ -64,7 +64,7 @@
          nil)))
 
   (testing "map-entry"
-    (is (let [list (linked-list/map-entry (linked-list/add-entry two-list "End") #(= "hello" %))]
+    (is (let [list (linked-list/map-entry (linked-list/add-entry "End" two-list) #(= "hello" %))]
           (=
            (linked-list/contains list false)
            (linked-list/contains list true))))

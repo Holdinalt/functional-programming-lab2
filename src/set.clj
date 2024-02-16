@@ -18,16 +18,16 @@
 (defn add [value collection]
   (cond
     collection (update-bucket
-                (get-bucket-num value collection)
-                (linked-list/add-entry (get-bucket-by-val value collection) value)
-                collection)
+                 (get-bucket-num value collection)
+                 (->> collection (get-bucket-by-val value) (linked-list/add-entry value))
+                 collection)
     :else (recur value (create-collection 8))))
 
 (defn restruct [collection]
   (cond
     collection (reduce
                 (fn [acc bucket]
-                  (linked-list/reduce-entry (fn [acc2 val] (set/add val acc2)) acc bucket))
+                  (linked-list/reduce-entry #(set/add %2 %1) acc bucket))
                 (create-collection (count collection))
                 collection)
     :else []))
@@ -43,17 +43,18 @@
   (cond
     collection (->> collection
                     (some #(linked-list/contains % value))
-                    (nil?)
-                    (not))
+                    nil?
+                    not)
     :else false))
 
 (defn get-vector [collection]
   (cond
-    collection (into [] (reduce
-                         (fn [acc bucket]
-                           (concat acc (linked-list/get-vector bucket)))
-                         []
-                         collection))
+    collection (into []
+                     (->> collection
+                          (map #(linked-list/get-vector %))
+                          (reduce concat [])
+                          )
+                     )
     :else []))
 
 (defn conv-vec [par]
@@ -63,23 +64,24 @@
 
 (defn filter-set [filterFn collection]
   (cond
-    collection (conv-vec (map #(linked-list/filter-entry % filterFn) collection))
+    collection (->> collection
+                    (map #(linked-list/filter-entry % filterFn))
+                    conv-vec
+                 )
     :else nil))
 
 (defn map-set [fun collection]
   (cond
     collection (->> collection
                     (map #(linked-list/map-entry % fun))
-                    (restruct)
-                    (conv-vec))
+                    restruct
+                    conv-vec)
 
     :else nil))
 
 (defn reduce-set [fun accum collection]
   (cond
-    collection (reduce
-                (fn [acc bucket]
-                  (linked-list/reduce-entry fun acc bucket))
-                accum
-                collection)
+    collection (->> collection
+                 (reduce #(linked-list/reduce-entry fun %1 %2))
+                 )
     :else accum))
