@@ -18,9 +18,9 @@
 (defn add [value collection]
   (cond
     collection (update-bucket
-                 (get-bucket-num value collection)
-                 (->> collection (get-bucket-by-val value) (linked-list/add-entry value))
-                 collection)
+                (get-bucket-num value collection)
+                (->> collection (get-bucket-by-val value) (linked-list/add-entry value))
+                collection)
     :else (recur value (create-collection 8))))
 
 (defn restruct [collection]
@@ -52,9 +52,8 @@
     collection (into []
                      (->> collection
                           (map #(linked-list/get-vector %))
-                          (reduce concat [])
-                          )
-                     )
+                          (reduce concat [])))
+
     :else []))
 
 (defn conv-vec [par]
@@ -66,8 +65,7 @@
   (cond
     collection (->> collection
                     (map #(linked-list/filter-entry % filterFn))
-                    conv-vec
-                 )
+                    conv-vec)
     :else nil))
 
 (defn map-set [fun collection]
@@ -82,6 +80,5 @@
 (defn reduce-set [fun accum collection]
   (cond
     collection (->> collection
-                 (reduce #(linked-list/reduce-entry fun %1 %2))
-                 )
+                    (reduce #(linked-list/reduce-entry fun %1 %2)))
     :else accum))
