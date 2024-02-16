@@ -4,7 +4,7 @@
 
 (def filled (set/add "1" (set/add "2" (set/add "3" (set/add "4" (set/add "5" (set/add 2 (set/add 1 nil))))))))
 
-(defn parseString [num]
+(defn parse-string [num]
   (cond
     (string? num) (read-string num)
     :else num))
@@ -40,7 +40,7 @@
          (set/get-vector nil)
          []))
     (is (=
-         (vec (sort #(> (parseString %1) (parseString %2)) (set/get-vector filled)))
+         (vec (sort #(> (parse-string %1) (parse-string %2)) (set/get-vector filled)))
          ["5" "4" "3" "2" 2 1 "1"]))
     (is (=
          (set/get-vector (set/add "hello" nil))
@@ -61,11 +61,11 @@
 
   (testing "map-set"
 
-    (let [listFilled (set/map-set #(or (= "3" %) (= "2" %)) filled)]
+    (let [list-filled (set/map-set #(or (= "3" %) (= "2" %)) filled)]
       (is
-       (set/has true listFilled)
-       (set/has false listFilled))
-      (let [list1 (set/delete true listFilled)]
+       (set/has true list-filled)
+       (set/has false list-filled))
+      (let [list1 (set/delete true list-filled)]
         (is
          (not (set/has true list1))
          (set/has false list1))
