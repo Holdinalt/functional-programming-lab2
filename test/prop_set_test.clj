@@ -17,7 +17,7 @@
 
     (= vec1 vec2)))
 
-(declare set-add monoid-ident set-delete set-reduce monoid-asoc)
+(declare set-add monoid-ident set-delete set-reduce monoid-assoc)
 
 (defspec set-add 100
   (prop/for-all [v (gen/vector (gen/one-of [gen/large-integer gen/small-integer]))]
@@ -43,7 +43,7 @@
                    '()
                    (set v))))))
 
-(defspec monoid-asoc 100
+(defspec monoid-assoc 100
   (prop/for-all [v1 (gen/not-empty (gen/vector gen/large-integer))
                  v2 (gen/not-empty (gen/vector gen/large-integer))]
                 (comp-list
