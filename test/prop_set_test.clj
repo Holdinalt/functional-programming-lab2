@@ -40,11 +40,10 @@
 (defspec monoid-assoc 100
   (prop/for-all [v1 (gen/vector (gen/one-of [gen/boolean gen/large-integer gen/double gen/string-alphanumeric]))
                  v2 (gen/vector (gen/one-of [gen/boolean gen/large-integer gen/double gen/string-alphanumeric]))
-                 v3 (gen/vector (gen/one-of [gen/boolean gen/large-integer gen/double gen/string-alphanumeric]))
-                 ]
+                 v3 (gen/vector (gen/one-of [gen/boolean gen/large-integer gen/double gen/string-alphanumeric]))]
                 (set/equal
-                  (->> nil (set/add (hash v1)) (set/add (hash v2)) (set/add (hash v3)))
-                  (->> nil (set/add (hash v2)) (set/add (hash v3)) (set/add (hash v1))))))
+                 (->> nil (set/add (hash v1)) (set/add (hash v2)) (set/add (hash v3)))
+                 (->> nil (set/add (hash v2)) (set/add (hash v3)) (set/add (hash v1))))))
 
 (defspec monoid-ident 100
   (prop/for-all [v1 (gen/not-empty (gen/vector gen/large-integer))]
