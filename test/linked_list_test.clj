@@ -7,17 +7,17 @@
 
 (deftest linked-list-test
   (testing "add-entry"
-    (is (linked-list/contains one-list "hello"))
-    (is (linked-list/contains two-list "hello"))
-    (is (linked-list/contains two-list "World!"))
-    (is (not (linked-list/contains one-list "No!"))))
+    (is (linked-list/contains "hello" one-list))
+    (is (linked-list/contains "hello" two-list))
+    (is (linked-list/contains "World!" two-list))
+    (is (not (linked-list/contains "No!" one-list))))
   (testing "remove-entry"
     (is
-     (not (linked-list/contains (linked-list/remove-entry two-list "hello") "hello")))
+     (not (linked-list/contains "hello" (linked-list/remove-entry two-list "hello"))))
 
-    (is (linked-list/contains (linked-list/remove-entry two-list "hello") "World!"))
+    (is (linked-list/contains "World!" (linked-list/remove-entry two-list "hello")))
 
-    (is (linked-list/contains (linked-list/remove-entry two-list nil) "hello"))
+    (is (linked-list/contains "hello" (linked-list/remove-entry two-list nil)))
 
     (is (=
          (linked-list/remove-entry nil "hello")
@@ -32,10 +32,10 @@
          (linked-list/find-entry nil "hello")
          nil))
 
-    (is (linked-list/contains (linked-list/find-entry two-list "World!") "World!"))
+    (is (linked-list/contains "World!" (linked-list/find-entry two-list "World!")))
 
     (is (= (linked-list/find-entry two-list "never") nil)))
-  (is (linked-list/contains (linked-list/find-entry one-list "World!") nil))
+  (is (linked-list/contains nil (linked-list/find-entry one-list "World!")))
 
   (testing "get-vector"
     (is (=
@@ -66,13 +66,13 @@
   (testing "map-entry"
     (is (let [list (linked-list/map-entry (linked-list/add-entry "End" two-list) #(= "hello" %))]
           (=
-           (linked-list/contains list false)
-           (linked-list/contains list true))))
+           (linked-list/contains false list)
+           (linked-list/contains true list))))
 
     (is (let [list (linked-list/map-entry one-list #(= "hello" %))]
           (=
-           (not (linked-list/contains list false))
-           (linked-list/contains list true)))
+           (not (linked-list/contains false list))
+           (linked-list/contains true list)))
 
         (is (=
              (linked-list/map-entry nil #(= "hello" %))
@@ -89,6 +89,15 @@
 
     (is (=
          (linked-list/reduce-entry str "" nil)
-         ""))))
+         "")))
+
+  ;(testing "equal"
+  ;  (is (=
+  ;
+  ;        true
+  ;        ))
+  ;  )
+  )
+
 
 

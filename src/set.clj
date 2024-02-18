@@ -42,9 +42,8 @@
 (defn has [value collection]
   (cond
     collection (->> collection
-                    (some #(linked-list/contains % value))
-                    nil?
-                    not)
+                    (get-bucket-by-val value)
+                    (linked-list/contains value))
     :else false))
 
 (defn get-vector [collection]
@@ -84,3 +83,30 @@
                 accum
                 collection)
     :else accum))
+
+(defn len [collection]
+  (reduce
+   #(+ %1 (linked-list/count-entry %2))
+   0
+   collection))
+
+(defn comparison [set1 set2]
+  (set/reduce-set
+   (fn [acc val]
+     (and acc (set/has val set2)))
+   true
+   set1))
+
+(defn equal [set1 set2]
+  (cond
+    (= (len set1) (len set2)) (comparison set1 set2)
+    :else false))
+
+(defn conjoin [set1 set2]
+  (cond
+    (nil? set2) set1
+    (= 0 (count set2)) set1
+    :else (reduce-set
+           #(set/add %2 set1)
+           nil
+           set2)))

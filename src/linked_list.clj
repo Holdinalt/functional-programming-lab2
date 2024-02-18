@@ -9,10 +9,10 @@
             :else (create-entry value (add-entry new-value next)))
     :else (create-entry new-value nil)))
 
-(defn contains [{:keys [value next]} to-value]
+(defn contains [to-value {:keys [value next]}]
   (cond
     (= value to-value) true
-    next (recur next to-value)
+    next (recur to-value next)
     :else false))
 
 (defn remove-entry [{:keys [next value] :as entry} to-value]
@@ -47,11 +47,32 @@
 
 (defn reduce-entry [fun accum {:keys [next value] :as entry}]
   (cond
-    entry (reduce-entry fun (fun accum value) next)
+    entry (reduce-entry
+           fun
+           (fun accum value)
+           next)
     :else accum))
 
 (defn count-entry [{:keys [next] :as entry}]
   (cond
     entry (+ 1 (count-entry next))
     :else 0))
+
+;(defn comparison [{:keys [value next]} compare]
+;  (let [comp-res (contains compare value)]
+;    (cond
+;      (nil? next) comp-res
+;      :else (and comp-res (comparison next compare))
+;      )
+;    )
+;  )
+;
+;(defn equal [main-entry compare-entry]
+;  (cond
+;    (= (count-entry main-entry) (count-entry compare-entry)) (comparison main-entry compare-entry)
+;    :else false
+;    )
+;  )
+
+
 

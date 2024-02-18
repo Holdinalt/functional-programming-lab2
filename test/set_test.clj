@@ -82,4 +82,16 @@
 
     (is (=
          (set/reduce-set str "" nil)
-         ""))))
+         "")))
+
+  (testing "equal"
+    (is (set/equal filled filled))
+    (is (not (set/equal (set/add "1000" filled) filled))))
+
+  (testing "conj"
+    (let [set1 (set/add "1" nil)
+          set2 (set/add "2" nil)
+          con (set/conjoin set1 set2)]
+      (is (set/has "1" con))
+      (is (set/has "2" con))
+      (is (not (set/has "3" con))))))
