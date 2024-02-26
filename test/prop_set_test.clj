@@ -4,10 +4,10 @@
             [clojure.test.check.clojure-test :refer [defspec]]
             [clojure.test.check.properties :as prop]))
 
-(defn add-vector->set [list collection]
+(defn add-vector->set [vector collection]
   (cond
-    (= (count list) 0) [nil]
-    :else (reduce (fn [accum val] (set/add val accum)) collection list)))
+    (= (count vector) 0) [nil]
+    :else (reduce (fn [accum val] (set/add val accum)) collection vector)))
 
 (defn delete-vector-from-set [list collection] (reduce (fn [accum val] (set/delete val accum)) collection list))
 
@@ -38,12 +38,15 @@
                    (set v))))))
 
 (defspec monoid-assoc 100
-  (prop/for-all [v1 (gen/vector (gen/one-of [gen/boolean gen/large-integer gen/double gen/string-alphanumeric]))
-                 v2 (gen/vector (gen/one-of [gen/boolean gen/large-integer gen/double gen/string-alphanumeric]))
-                 v3 (gen/vector (gen/one-of [gen/boolean gen/large-integer gen/double gen/string-alphanumeric]))]
-                (set/equal
-                 (->> nil (set/add v1) (set/add v2) (set/add v3))
-                 (->> nil (set/add v2) (set/add v3) (set/add v1)))))
+  (prop/for-all [v1 (gen/not-empty (gen/vector (gen/one-of [gen/boolean gen/large-integer gen/double])))
+                 v2 (gen/not-empty (gen/vector (gen/one-of [gen/boolean gen/large-integer gen/double])))
+                 v3 (gen/not-empty (gen/vector (gen/one-of [gen/boolean gen/large-integer gen/double])))]
+                (let [a (add-vector->set v1 nil)
+                      b (add-vector->set v2 nil)
+                      c (add-vector->set v3 nil)]
+                  (set/equal
+                   (set/conjoin (set/conjoin a b) c)
+                   (set/conjoin a (set/conjoin b c))))))
 
 (defspec monoid-ident 100
   (prop/for-all [v1 (gen/not-empty (gen/vector gen/large-integer))]

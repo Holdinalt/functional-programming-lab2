@@ -107,6 +107,6 @@
     (nil? set2) set1
     (= 0 (count set2)) set1
     :else (reduce-set
-           #(set/add %2 set1)
-           nil
+           #(set/add %2 %1)
+           set1
            set2)))
